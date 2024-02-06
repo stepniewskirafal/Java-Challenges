@@ -8,7 +8,9 @@ import pl.rstepniewski.libraryapp.model.mapper.LibraryBranchDtoMapper;
 import pl.rstepniewski.libraryapp.model.dto.LibraryBranchDTO;
 import pl.rstepniewski.libraryapp.repository.LibraryBranchRepository;
 
+import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Service
 public class LibraryBranchService {
@@ -18,6 +20,15 @@ public class LibraryBranchService {
     public LibraryBranchService(LibraryBranchRepository libraryBranchRepository, LibraryBranchDtoMapper libraryBranchDtoMapper) {
         this.libraryBranchRepository = libraryBranchRepository;
         this.libraryBranchDtoMapper = libraryBranchDtoMapper;
+    }
+
+    @Transactional(readOnly = true)
+    public List<LibraryBranchDTO> getAll() {
+        return libraryBranchRepository
+                .findAll()
+                .stream()
+                .map(libraryBranchDtoMapper::map)
+                .collect(Collectors.toList());
     }
 
     @Transactional
@@ -34,6 +45,7 @@ public class LibraryBranchService {
         final LibraryBranch savedLibraryBranch = libraryBranchRepository.save(libraryBranch);
         return libraryBranchDtoMapper.map(savedLibraryBranch);
     }
+
     @Transactional
     public void deleteById(UUID libraryBranchId) {
         libraryBranchRepository.deleteById(libraryBranchId);

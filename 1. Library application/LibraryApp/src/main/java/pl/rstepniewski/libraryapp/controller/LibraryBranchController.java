@@ -9,6 +9,7 @@ import pl.rstepniewski.libraryapp.model.dto.LibraryBranchDTO;
 import pl.rstepniewski.libraryapp.services.LibraryBranchService;
 
 import java.net.URI;
+import java.util.List;
 import java.util.UUID;
 
 @RequiredArgsConstructor
@@ -17,6 +18,11 @@ import java.util.UUID;
 public class LibraryBranchController {
 
     private final LibraryBranchService service;
+
+    @GetMapping("/libraryBranches")
+    public ResponseEntity<List<LibraryBranchDTO>> getlibraryBranches(){
+        return ResponseEntity.ok(service.getAll());
+    }
 
     @PostMapping("/libraryBranch")
     public ResponseEntity<LibraryBranchDTO> addLibraryBranch(@RequestBody @Valid LibraryBranchDTO libraryBranchDTO) {
