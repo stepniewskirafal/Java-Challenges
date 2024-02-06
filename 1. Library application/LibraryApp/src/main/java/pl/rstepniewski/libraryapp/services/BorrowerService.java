@@ -49,7 +49,6 @@ public class BorrowerService {
         return borrowerDtoMapper.map(savedBorrower);
     }
 
-
     public boolean doesExist(UUID id) {
         return borrowerRepository.existsById(id);
     }

@@ -22,6 +22,8 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import pl.rstepniewski.libraryapp.services.BookService;
 import pl.rstepniewski.libraryapp.model.dto.BookDTO;
+import pl.rstepniewski.libraryapp.validation.exceptions.BookPatchFormatException;
+import pl.rstepniewski.libraryapp.validation.exceptions.BookPatchUnprocessableException;
 
 import java.net.URI;
 import java.util.List;
@@ -83,8 +85,10 @@ public class BookController {
             service.updateBook(bookDTOPatched);
         }catch (NoSuchElementException e){
             return ResponseEntity.notFound().build();
-        } catch (JsonPatchException | JsonProcessingException e) {
-            return ResponseEntity.internalServerError().build();
+        } catch (JsonPatchException e) {
+            throw new BookPatchFormatException();
+        } catch (JsonProcessingException e) {
+            throw new BookPatchUnprocessableException();
         }
         return ResponseEntity.noContent().build();
     }
@@ -97,7 +101,7 @@ public class BookController {
     }
 
     @DeleteMapping("/book/{id}")
-    public ResponseEntity<?> patchBook(@PathVariable UUID id){
+    public ResponseEntity<?> deleteBook(@PathVariable UUID id){
         service.deleteBook(id);
         return  ResponseEntity.noContent().build();
     }

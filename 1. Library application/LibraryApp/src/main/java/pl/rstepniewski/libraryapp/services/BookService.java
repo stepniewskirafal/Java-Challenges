@@ -9,6 +9,7 @@ import pl.rstepniewski.libraryapp.model.mapper.BookDtoMapper;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -54,6 +55,11 @@ public class BookService {
     @Transactional
     public void saveBook(Book book) {
         bookRepository.save(book);
+    }
+
+    @Transactional
+    public void saveAllBooks(Set<Book> books) {
+        bookRepository.saveAll(books);
     }
 
 

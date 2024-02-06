@@ -66,4 +66,14 @@ public class GlobalExceptionHandler {
         return ResponseEntity.badRequest().body("exception: " + e.getMessage());
     }
 
+    @ExceptionHandler(BookPatchFormatException.class)
+    public ResponseEntity<String> handleBookPatchFormatException(BookPatchFormatException e) {
+        return ResponseEntity.badRequest().body("exception: " + e.getMessage());
+    }
+
+    @ExceptionHandler(BookPatchUnprocessableException.class)
+    public ResponseEntity<String> handleBookPatchUnprocessableException(BookPatchUnprocessableException e) {
+        return ResponseEntity.unprocessableEntity().body("exception: " + e.getMessage());
+    }
+
 }
