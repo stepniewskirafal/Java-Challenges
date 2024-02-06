@@ -14,7 +14,7 @@ public class BookDtoMapper {
 
 
     public BookDTO map(Book book) {
-        BookDTO dto = BookDTO.builder()
+        return BookDTO.builder()
                 .id(book.getId())
                 .title(book.getTitle())
                 .author(book.getAuthor())
@@ -24,12 +24,10 @@ public class BookDtoMapper {
                 .category(categoryDtoMapper.map(book.getCategory()))
                 .libraryBranch(libraryBranchDtoMapper.map(book.getLibraryBranch()))
                 .build();
-
-        return dto;
     }
 
     public Book map(BookDTO dto) {
-        Book book = Book.builder()
+        return Book.builder()
                 .id(dto.getId())
                 .title(dto.getTitle())
                 .author(dto.getAuthor())
@@ -39,7 +37,5 @@ public class BookDtoMapper {
                 .category(categoryDtoMapper.map(dto.getCategory()))
                 .libraryBranch(libraryBranchDtoMapper.map(dto.getLibraryBranch()))
                 .build();
-
-        return book;
     }
 }

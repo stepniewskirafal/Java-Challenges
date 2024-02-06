@@ -8,24 +8,20 @@ import pl.rstepniewski.libraryapp.model.dto.BorrowerDTO;
 public class BorrowerDtoMapper {
 
     public BorrowerDTO map(Borrower borrower) {
-        BorrowerDTO dto = BorrowerDTO.builder()
+        return BorrowerDTO.builder()
                 .id(borrower.getId())
                 .pesel(borrower.getPesel())
                 .name(borrower.getName())
                 .lastName(borrower.getLastName())
                 .build();
-
-        return dto;
     }
 
     public Borrower map(BorrowerDTO dto) {
-        Borrower borrower = Borrower.builder()
+        return Borrower.builder()
                 .id(dto.getId())
                 .pesel(dto.getPesel())
                 .name(dto.getName())
                 .lastName(dto.getLastName())
                 .build();
-
-        return borrower;
     }
 }
