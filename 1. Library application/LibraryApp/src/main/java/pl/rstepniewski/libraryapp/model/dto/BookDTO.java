@@ -32,7 +32,7 @@ public class BookDTO {
     @Digits(integer = 4, fraction = 0)
     @Min(value = 1900, message = "The year must be 1900 or later")
     @MaxYear(message = "Year can not be future")
-    private int year_published;
+    private int yearPublished;
 
     @ISBN
     @Column(unique = true)
