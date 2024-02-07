@@ -8,14 +8,16 @@ import pl.rstepniewski.libraryapp.model.dto.LendingLogDTO;
 @Component
 @RequiredArgsConstructor
 public class LendingLogDtoMapper {
-    private final BookDtoMapper mapper;
+    private final BookDtoMapper bookDtoMapper;
+    private final BorrowerDtoMapper borrowerDtoMapper;
+
     public LendingLogDTO map(LendingLog lendingLog) {
         return LendingLogDTO.builder()
                 .id(lendingLog.getId())
                 .transactionDate(lendingLog.getTransactionDate())
                 .isReturn(lendingLog.isReturn())
-                .borrower(lendingLog.getBorrower())
-                .books(mapper.mapToDtoList(lendingLog.getBooks()))
+                .borrower(borrowerDtoMapper.map(lendingLog.getBorrower()))
+                .books(bookDtoMapper.mapToDtoList(lendingLog.getBooks()))
                 .build();
     }
 
@@ -24,8 +26,8 @@ public class LendingLogDtoMapper {
                 .id(dto.getId())
                 .transactionDate(dto.getTransactionDate())
                 .isReturn(dto.isReturn())
-                .borrower(dto.getBorrower())
-                .books(mapper.mapToList(dto.getBooks()))
+                .borrower(borrowerDtoMapper.map(dto.getBorrower()))
+                .books(bookDtoMapper.mapToList(dto.getBooks()))
                 .build();
     }
 }

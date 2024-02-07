@@ -5,8 +5,6 @@ import jakarta.validation.constraints.NotNull;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
-import pl.rstepniewski.libraryapp.model.Book;
-import pl.rstepniewski.libraryapp.model.Borrower;
 
 import java.util.Date;
 import java.util.Set;
@@ -27,5 +25,5 @@ public class LendingLogDTO {
 
     private Set<BookDTO> books;
 
-    private Borrower borrower;
+    private BorrowerDTO borrower;
 }
