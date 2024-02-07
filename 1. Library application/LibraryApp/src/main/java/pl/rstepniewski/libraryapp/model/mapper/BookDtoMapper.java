@@ -5,6 +5,9 @@ import org.springframework.stereotype.Component;
 import pl.rstepniewski.libraryapp.model.Book;
 import pl.rstepniewski.libraryapp.model.dto.BookDTO;
 
+import java.util.Set;
+import java.util.stream.Collectors;
+
 @Component
 @RequiredArgsConstructor
 public class BookDtoMapper {
@@ -26,6 +29,13 @@ public class BookDtoMapper {
                 .build();
     }
 
+    public Set<BookDTO> mapToDtoList(Set<Book> books) {
+        return books
+                .stream()
+                .map(this::map)
+                .collect(Collectors.toSet());
+    }
+
     public Book map(BookDTO dto) {
         return Book.builder()
                 .id(dto.getId())
@@ -37,5 +47,12 @@ public class BookDtoMapper {
                 .category(categoryDtoMapper.map(dto.getCategory()))
                 .libraryBranch(libraryBranchDtoMapper.map(dto.getLibraryBranch()))
                 .build();
+    }
+
+    public Set<Book> mapToList(Set<BookDTO> booksDto) {
+        return booksDto
+                .stream()
+                .map(this::map)
+                .collect(Collectors.toSet());
     }
 }

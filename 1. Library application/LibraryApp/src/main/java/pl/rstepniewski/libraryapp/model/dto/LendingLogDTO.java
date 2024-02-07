@@ -25,7 +25,7 @@ public class LendingLogDTO {
     @NotNull
     private boolean isReturn;
 
-    private Set<Book> books;
+    private Set<BookDTO> books;
 
     private Borrower borrower;
 }
