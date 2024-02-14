@@ -1,6 +1,0 @@
-2024-02-06 08:37:46 [main] INFO  p.r.l.c.BorrowerControllerTest - Starting BorrowerControllerTest using Java 21 with PID 23700 (started by rafal in C:\Projekt\Java Challenges Real Interview\Java-Challenges\1. Library application\LibraryApp)
-2024-02-06 08:37:46 [main] INFO  p.r.l.c.BorrowerControllerTest - No active profile set, falling back to 1 default profile: "default"
-2024-02-06 08:37:50 [main] INFO  o.s.b.t.m.w.SpringBootMockServletContext - Initializing Spring TestDispatcherServlet ''
-2024-02-06 08:37:50 [main] INFO  o.s.t.w.s.TestDispatcherServlet - Initializing Servlet ''
-2024-02-06 08:37:50 [main] INFO  o.s.t.w.s.TestDispatcherServlet - Completed initialization in 2 ms
-2024-02-06 08:37:50 [main] INFO  p.r.l.c.BorrowerControllerTest - Started BorrowerControllerTest in 4.276 seconds (process running for 5.797)
