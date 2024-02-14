@@ -14,5 +14,4 @@ public class DiscountStrategy {
                 .collect(Collectors.toList());
 
         public static final Function<List<Double>, List<Double>> ZERO_DISCOUNT = prices -> prices;
-
 }

@@ -2,30 +2,32 @@ package pl.rstepniewski.internetshop.services;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
+import pl.rstepniewski.internetshop.discount.DiscountService;
 import pl.rstepniewski.internetshop.model.Cart;
 import pl.rstepniewski.internetshop.model.Product;
-import pl.rstepniewski.internetshop.model.User;
 import pl.rstepniewski.internetshop.repositories.CartRepository;
 
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Set;
-import java.util.function.Function;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
 public class CartService {
     private final CartRepository cartRepository;
-    private final UserService userService;
-    private final Function<List<Double>, List<Double>> discountStrategy;
+    private final DiscountService discountService;
 
-    @Transactional(propagation = Propagation.REQUIRES_NEW)
-    public void addProductToCart(Product newProduct, Long userId){
-        User user = userService.findById(userId).orElseThrow(NoSuchElementException::new);
-        Cart cart = user.getCart();
+    @Transactional
+    public Cart addNewCart(Cart cart){
+        return cartRepository.save(cart);
+    }
+
+    @Transactional
+    public Cart addProductToCart(Product newProduct, UUID cartID){
+        Cart cart = cartRepository.findById(cartID).orElseThrow(NoSuchElementException::new);
 
          Set<Product> products = cart.getProducts();
          if(products.contains(newProduct)){
@@ -37,7 +39,7 @@ public class CartService {
          }
         cart.setProducts(products);
         cart.setSumPrice(calculateCartPrice(cart));
-        cartRepository.save(cart);
+        return cartRepository.save(cart);
     }
 
     public double calculateCartPrice(Cart cart) {
@@ -45,7 +47,7 @@ public class CartService {
                 .map(product -> product.getPrice() * product.getQuantity())
                 .collect(Collectors.toList());
 
-        List<Double> discountedPrices = discountStrategy.apply(productPrices);
+        List<Double> discountedPrices = discountService.discountStrategy().apply(productPrices);
         return discountedPrices.stream().mapToDouble(Double::doubleValue).sum();
     }
 }

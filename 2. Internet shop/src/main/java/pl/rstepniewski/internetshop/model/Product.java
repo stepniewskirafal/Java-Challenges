@@ -1,28 +1,29 @@
 package pl.rstepniewski.internetshop.model;
 
 import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import org.hibernate.proxy.HibernateProxy;
 
 import java.util.Objects;
+import java.util.UUID;
 
 @Entity
 @Getter
 @Setter
-@NoArgsConstructor
+@Builder
+@AllArgsConstructor
 public class Product {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private UUID id;
     private String name;
     private double price;
     private int quantity;
+
+    public Product() {
+        this.id = UUID.randomUUID();
+    }
 
     @Override
     public final boolean equals(Object o) {
