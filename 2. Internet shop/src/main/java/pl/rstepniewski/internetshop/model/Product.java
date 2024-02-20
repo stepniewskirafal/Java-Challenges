@@ -2,9 +2,13 @@ package pl.rstepniewski.internetshop.model;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.Setter;
 import org.hibernate.proxy.HibernateProxy;
 
+import java.math.BigDecimal;
 import java.util.Objects;
 import java.util.UUID;
 
@@ -18,7 +22,7 @@ public class Product {
     @Id
     private UUID id;
     private String name;
-    private double price;
+    private BigDecimal price;
     private int quantity;
 
     public Product() {

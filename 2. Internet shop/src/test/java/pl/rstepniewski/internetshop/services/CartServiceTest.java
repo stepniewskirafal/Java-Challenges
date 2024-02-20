@@ -10,9 +10,11 @@ import pl.rstepniewski.internetshop.config.ConfigParameterService;
 import pl.rstepniewski.internetshop.model.Cart;
 import pl.rstepniewski.internetshop.model.Product;
 
+import java.math.BigDecimal;
 import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.springframework.test.util.AssertionErrors.assertTrue;
 
 @SpringBootTest
 class CartServiceTest {
@@ -29,7 +31,15 @@ class CartServiceTest {
     void setUp() {
         cart = new Cart();
         productFirst = new Product();
-        productSecond = new Product();
+        productSecond = new Product();  // dodaj name
+
+        productFirst.setPrice(BigDecimal.valueOf(100.0));
+        productFirst.setQuantity(1);
+        productFirst.setName("First");
+
+        productSecond.setPrice(BigDecimal.valueOf(200.0));
+        productSecond.setQuantity(2);
+        productSecond.setName("Second");
         cartId = cart.getId();
     }
     @AfterEach
@@ -40,51 +50,49 @@ class CartServiceTest {
     void shouldCalculateOneProductCartPriceWithNoDiscount() {
         // given
         configParameterService.save(new ConfigParameter(CONFIG_KEY_STRATEGY, "zeroDiscount"));
-        productFirst.setPrice(100.0);
-        productFirst.setQuantity(1);
+
         cart.setProducts(Set.of(productFirst));
         // when
-        double price = cartService.calculateCartPrice(cart);
+        BigDecimal price = cartService.calculateCartPrice(cart);
         //then
-        assertEquals(100.0, price, "Price should match the product price with no discount applied.");
+        assertTrue("Price should match the product price with no discount applied.",
+                BigDecimal.valueOf(100).compareTo(price) == 0);
     }
     @Test
     void shouldCalculateTwoProductsCartPriceWithNoDiscount() {
         // given
         configParameterService.save(new ConfigParameter(CONFIG_KEY_STRATEGY, "zeroDiscount"));
-        productFirst.setPrice(100.0);
-        productFirst.setQuantity(1);
-        productSecond.setPrice(200.0);
-        productSecond.setQuantity(2);
+
         cart.setProducts(Set.of(productFirst, productSecond));
         // when
-        double price = cartService.calculateCartPrice(cart);
+        BigDecimal price = cartService.calculateCartPrice(cart);
         //then
-        assertEquals(500.0, price, "Price should match the product price with no discount applied.");
+        assertTrue("Price should match the product price with no discount applied.",
+                BigDecimal.valueOf(500).compareTo(price) == 0);
     }
     @Test
     void shouldCalculateOneProductCartPriceWith10PercentDiscount() {
         // given
         configParameterService.save(new ConfigParameter(CONFIG_KEY_STRATEGY, "holidayDiscount"));
-        productFirst.setPrice(100.0);
-        productFirst.setQuantity(1);
+
         cart.setProducts(Set.of(productFirst));
         // when
-        double price = cartService.calculateCartPrice(cart);
+        BigDecimal price = cartService.calculateCartPrice(cart);
         //then
-        assertEquals(90.0, price, "Price should match the product price with 10% discount applied.");
+        assertTrue("Price should match the product price with 10% discount applied.",
+                BigDecimal.valueOf(90).compareTo(price) == 0);
     }
     @Test
     void shouldCalculateOneProductCartPriceWith25PercentDiscount() {
         // given
         configParameterService.save(new ConfigParameter(CONFIG_KEY_STRATEGY, "blackWeekDiscount"));
-        productFirst.setPrice(100.0);
-        productFirst.setQuantity(1);
+
         cart.setProducts(Set.of(productFirst));
         // when
-        double price = cartService.calculateCartPrice(cart);
+        BigDecimal price = cartService.calculateCartPrice(cart);
         //then
-        assertEquals(75.0, price, "Price should match the product price with 25% discount applied.");
+        assertTrue("Price should match the product price with 25% discount applied.",
+                BigDecimal.valueOf(75).compareTo(price) == 0);
     }
     @Test
     void shouldAddOneProductToCart() {

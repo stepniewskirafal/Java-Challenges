@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import pl.rstepniewski.internetshop.config.ConfigParameterService;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.function.Function;
 
@@ -13,7 +14,7 @@ public class DiscountService {
     private final ConfigParameterService service;
     private final static String DISCOUNT_STRATEGY = "DISCOUNT_STRATEGY";
 
-    public Function<List<Double>, List<Double>> discountStrategy() {
+    public Function<List<BigDecimal>, List<BigDecimal>> discountStrategy() {
         String strategy = service.getConfigValue(DISCOUNT_STRATEGY);
             return switch (strategy) {
             case "blackWeekDiscount" -> DiscountStrategy.BLACK_WEEK_DISCOUNT;

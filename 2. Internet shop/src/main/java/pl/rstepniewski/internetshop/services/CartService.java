@@ -8,6 +8,7 @@ import pl.rstepniewski.internetshop.model.Cart;
 import pl.rstepniewski.internetshop.model.Product;
 import pl.rstepniewski.internetshop.repositories.CartRepository;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Set;
@@ -31,7 +32,7 @@ public class CartService {
 
          Set<Product> products = cart.getProducts();
          if(products.contains(newProduct)){
-             Product product = products.stream().filter(newProduct::equals).findAny().orElseThrow(NoSuchElementException::new);
+             Product product = products.stream().filter(newProduct::equals).findAny().orElseThrow(NoSuchElementException::new); //equals bez ID i ilość
              product.setQuantity(product.getQuantity()+1);
              products.add(product);
          }else{
@@ -42,12 +43,12 @@ public class CartService {
         return cartRepository.save(cart);
     }
 
-    public double calculateCartPrice(Cart cart) {
-        final List<Double> productPrices = cart.getProducts().stream()
-                .map(product -> product.getPrice() * product.getQuantity())
+    public BigDecimal calculateCartPrice(Cart cart) { //schować metodę           // osobna klasa na weściu cart i strategia
+        final List<BigDecimal> productPrices = cart.getProducts().stream()
+                .map(product -> product.getPrice().multiply(BigDecimal.valueOf(product.getQuantity())))
                 .collect(Collectors.toList());
 
-        List<Double> discountedPrices = discountService.discountStrategy().apply(productPrices);
-        return discountedPrices.stream().mapToDouble(Double::doubleValue).sum();
+        List<BigDecimal> discountedPrices = discountService.discountStrategy().apply(productPrices);
+        return discountedPrices.stream().reduce(BigDecimal.ZERO, BigDecimal::add);
     }
 }

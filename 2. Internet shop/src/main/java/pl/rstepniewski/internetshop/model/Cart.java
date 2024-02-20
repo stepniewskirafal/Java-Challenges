@@ -3,6 +3,7 @@ package pl.rstepniewski.internetshop.model;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.math.BigDecimal;
 import java.util.Set;
 import java.util.UUID;
 
@@ -17,7 +18,7 @@ public class Cart {
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private Set<Product> products;
 
-    private double sumPrice;
+    private BigDecimal sumPrice;
 
     public Cart() {
         this.id = UUID.randomUUID();
