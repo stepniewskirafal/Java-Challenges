@@ -12,15 +12,10 @@ import java.util.function.Function;
 @RequiredArgsConstructor
 public class DiscountService {
     private final ConfigParameterService service;
-    private final static String DISCOUNT_STRATEGY = "DISCOUNT_STRATEGY";
+    private final static String CHOSEN_STRATEGY = "DISCOUNT_STRATEGY";
 
     public Function<List<BigDecimal>, List<BigDecimal>> discountStrategy() {
-        String strategy = service.getConfigValue(DISCOUNT_STRATEGY);
-            return switch (strategy) {
-            case "blackWeekDiscount" -> DiscountStrategy.BLACK_WEEK_DISCOUNT;
-            case "holidayDiscount" -> DiscountStrategy.HOLIDAY_DISCOUNT;
-            case "zeroDiscount" -> DiscountStrategy.ZERO_DISCOUNT;
-            default -> throw new IllegalArgumentException("Unknown discount strategy: " + strategy);
-        };
+        final String configValue = service.getConfigValue(CHOSEN_STRATEGY);
+        return DiscountStrategy.fromString(configValue);
     }
 }

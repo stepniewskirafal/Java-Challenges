@@ -5,14 +5,27 @@ import java.util.List;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
-public class DiscountStrategy {
-        public static final Function<List<BigDecimal>, List<BigDecimal>> BLACK_WEEK_DISCOUNT = prices -> prices.stream()
+public enum DiscountStrategy {
+        BLACK_WEEK_DISCOUNT(prices -> prices.stream()
                 .map(price -> price.multiply(BigDecimal.valueOf(0.75)))
-                .collect(Collectors.toList());
+                .collect(Collectors.toList())),
+        HOLIDAY_DISCOUNT(prices -> prices.stream()
+                .map(price -> price.multiply(BigDecimal.valueOf(0.9)))
+                .collect(Collectors.toList())),
+        ZERO_DISCOUNT(prices -> prices);
 
-        public static final Function<List<BigDecimal>, List<BigDecimal>> HOLIDAY_DISCOUNT = prices -> prices.stream()
-                .map(price -> price.multiply(BigDecimal.valueOf(0.9)) )
-                .collect(Collectors.toList());
+        private final Function<List<BigDecimal>, List<BigDecimal>> strategy;
 
-        public static final Function<List<BigDecimal>, List<BigDecimal>> ZERO_DISCOUNT = prices -> prices;
+        DiscountStrategy(Function<List<BigDecimal>, List<BigDecimal>> strategy) {
+                this.strategy = strategy;
+        }
+
+        public static Function<List<BigDecimal>, List<BigDecimal>> fromString(String strategy) {
+                return switch (strategy) {
+                        case "blackWeekDiscount" -> BLACK_WEEK_DISCOUNT.strategy;
+                        case "holidayDiscount" -> HOLIDAY_DISCOUNT.strategy;
+                        case "zeroDiscount" -> ZERO_DISCOUNT.strategy;
+                        default -> throw new IllegalArgumentException("Unknown discount strategy: " + strategy);
+                };
+        }
 }
