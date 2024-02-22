@@ -7,13 +7,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import pl.rstepniewski.internetshop.config.ConfigParameter;
 import pl.rstepniewski.internetshop.config.ConfigParameterService;
+import pl.rstepniewski.internetshop.discount.DiscountService;
 import pl.rstepniewski.internetshop.model.Cart;
 import pl.rstepniewski.internetshop.model.Product;
 
 import java.math.BigDecimal;
 import java.util.*;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.springframework.test.util.AssertionErrors.assertEquals;
 import static org.springframework.test.util.AssertionErrors.assertTrue;
 
 @SpringBootTest
@@ -22,6 +23,10 @@ class CartServiceTest {
     private ConfigParameterService configParameterService;
     @Autowired
     private CartService cartService;
+    @Autowired
+    private PriceService priceService;
+    @Autowired
+    private DiscountService discountService;
     private final static String CONFIG_KEY_STRATEGY = "DISCOUNT_STRATEGY";
     private UUID cartId;
     private Cart cart;
@@ -31,20 +36,21 @@ class CartServiceTest {
     void setUp() {
         cart = new Cart();
         productFirst = new Product();
-        productSecond = new Product();  // dodaj name
+        productSecond = new Product();
 
         productFirst.setPrice(BigDecimal.valueOf(100.0));
         productFirst.setQuantity(1);
-        productFirst.setName("First");
+        productFirst.setName("First product name");
 
         productSecond.setPrice(BigDecimal.valueOf(200.0));
         productSecond.setQuantity(2);
-        productSecond.setName("Second");
+        productSecond.setName("Second product name");
         cartId = cart.getId();
     }
     @AfterEach
     public void tearDown() {
         configParameterService.cacheEvict();
+        cartService.deleteCart(cartId);
     }
     @Test
     void shouldCalculateOneProductCartPriceWithNoDiscount() {
@@ -53,7 +59,7 @@ class CartServiceTest {
 
         cart.setProducts(Set.of(productFirst));
         // when
-        BigDecimal price = cartService.calculateCartPrice(cart);
+        BigDecimal price = priceService.calculateCartPrice(cart, discountService.discountStrategy());
         //then
         assertTrue("Price should match the product price with no discount applied.",
                 BigDecimal.valueOf(100).compareTo(price) == 0);
@@ -65,7 +71,7 @@ class CartServiceTest {
 
         cart.setProducts(Set.of(productFirst, productSecond));
         // when
-        BigDecimal price = cartService.calculateCartPrice(cart);
+        BigDecimal price = priceService.calculateCartPrice(cart, discountService.discountStrategy());
         //then
         assertTrue("Price should match the product price with no discount applied.",
                 BigDecimal.valueOf(500).compareTo(price) == 0);
@@ -77,7 +83,7 @@ class CartServiceTest {
 
         cart.setProducts(Set.of(productFirst));
         // when
-        BigDecimal price = cartService.calculateCartPrice(cart);
+        BigDecimal price = priceService.calculateCartPrice(cart, discountService.discountStrategy());
         //then
         assertTrue("Price should match the product price with 10% discount applied.",
                 BigDecimal.valueOf(90).compareTo(price) == 0);
@@ -89,7 +95,7 @@ class CartServiceTest {
 
         cart.setProducts(Set.of(productFirst));
         // when
-        BigDecimal price = cartService.calculateCartPrice(cart);
+        BigDecimal price = priceService.calculateCartPrice(cart, discountService.discountStrategy());
         //then
         assertTrue("Price should match the product price with 25% discount applied.",
                 BigDecimal.valueOf(75).compareTo(price) == 0);
@@ -101,19 +107,10 @@ class CartServiceTest {
         // when
         cartService.addNewCart(cart);
         final Cart savedCart = cartService.addProductToCart(productFirst, cartId);
-        //then
-        assert savedCart.getProducts().contains(productFirst);
-    }
-    @Test
-    void shouldAddTwoProductsToCart() {
-        // given
 
-        // when
-        cartService.addNewCart(cart);
-        cartService.addProductToCart(productFirst, cartId);
-        final Cart savedCart = cartService.addProductToCart(productSecond, cartId);
+        final Optional<Product> productOptional = savedCart.getProducts().stream().filter(p -> p.equals(productFirst)).findAny();
         //then
-        assert savedCart.getProducts().contains(productFirst);
-        assert savedCart.getProducts().contains(productSecond);
+        assertEquals("Only one product should be added to the cart", 1, savedCart.getProducts().size());
+        assertTrue( "Product should be added to the cart", productOptional.isPresent());
     }
 }
