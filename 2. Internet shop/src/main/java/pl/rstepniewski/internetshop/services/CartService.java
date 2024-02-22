@@ -8,18 +8,22 @@ import pl.rstepniewski.internetshop.model.Cart;
 import pl.rstepniewski.internetshop.model.Product;
 import pl.rstepniewski.internetshop.repositories.CartRepository;
 
-import java.math.BigDecimal;
-import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
 public class CartService {
     private final CartRepository cartRepository;
     private final DiscountService discountService;
+    private final PriceService priceService;
+
+    @Transactional
+    public Optional<Cart> getNewCart(UUID cartId){
+        return cartRepository.findById(cartId);
+    }
 
     @Transactional
     public Cart addNewCart(Cart cart){
@@ -30,25 +34,23 @@ public class CartService {
     public Cart addProductToCart(Product newProduct, UUID cartID){
         Cart cart = cartRepository.findById(cartID).orElseThrow(NoSuchElementException::new);
 
-         Set<Product> products = cart.getProducts();
-         if(products.contains(newProduct)){
-             Product product = products.stream().filter(newProduct::equals).findAny().orElseThrow(NoSuchElementException::new); //equals bez ID i ilość
-             product.setQuantity(product.getQuantity()+1);
-             products.add(product);
-         }else{
-             products.add(newProduct);
-         }
+        Set<Product> products = cart.getProducts();
+
+        products.stream()
+                .filter(p -> p.getName().equals(newProduct.getName()))
+                .findFirst()
+                .ifPresentOrElse(
+                        oldProduct -> oldProduct.setQuantity(oldProduct.getQuantity() + newProduct.getQuantity()),
+                        () -> products.add(newProduct)
+                );
+
         cart.setProducts(products);
-        cart.setSumPrice(calculateCartPrice(cart));
+        cart.setSumPrice(priceService.calculateCartPrice(cart, discountService.discountStrategy()));
         return cartRepository.save(cart);
     }
 
-    public BigDecimal calculateCartPrice(Cart cart) { //schować metodę           // osobna klasa na weściu cart i strategia
-        final List<BigDecimal> productPrices = cart.getProducts().stream()
-                .map(product -> product.getPrice().multiply(BigDecimal.valueOf(product.getQuantity())))
-                .collect(Collectors.toList());
-
-        List<BigDecimal> discountedPrices = discountService.discountStrategy().apply(productPrices);
-        return discountedPrices.stream().reduce(BigDecimal.ZERO, BigDecimal::add);
+    @Transactional
+    public void deleteCart(UUID cartID){
+        cartRepository.deleteById(cartID);
     }
 }
