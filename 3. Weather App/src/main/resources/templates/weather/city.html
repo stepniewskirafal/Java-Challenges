@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="template :: head(title = 'Weather in your city')">
+
+</head>
+
+<body>
+<th:block th:replace="template :: header" />
+
+    <div>
+        <p th:text="${city}"></p>
+    </div>
+
+<th:block th:replace="template.html :: footer" />
+</body>
+</html>

@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+    <head th:replace="template :: head(title = 'Weather Application')">
+    </head>
+
+    <body>
+        <th:block th:replace="template :: header" />
+
+        <main class="container">
+            <div class="d-flex justify-content-center align-items-center p-4 p-md-5 mb-4 rounded text-body-emphasis bg-body-secondary">
+                <div class="col-lg-6 px-0">
+                    <h1 class="display-4 fst-italic">The latest research reveals...</h1>
+                    <p class="lead my-3">The EU experts have found that by increasing tax rates, we can halt climate change. They argue, "Had the dinosaurs paid taxes on their carbon footprint, they might have avoided climate change."</p>
+                </div>
+            </div>
+
+            <div>
+                <h3>Check the weather in your <a href="#" class="icon-link gap-1 icon-link-hover">city</a> now</h3>
+            </div>
+        </main>
+
+        <th:block th:replace="template.html :: footer" />
+    </body>
+</html>
