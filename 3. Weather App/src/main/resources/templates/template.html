@@ -1,7 +1,7 @@
 <!doctype html>
 <html lang="en" data-bs-theme="auto" xmlns:th="http://www.thymeleaf.org">
 <head th:fragment="head(title)">
-    <script src="/docs/5.3/assets/js/color-modes.js"></script>
+    <!---<script src="/docs/5.3/assets/js/color-modes.js"></script> --->
 
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -24,22 +24,10 @@
     <header class="border-bottom lh-1 py-3">
         <div class="row flex-nowrap justify-content-between align-items-center">
             <div class="text-center">
-                <a class="blog-header-logo text-body-emphasis text-decoration-none" href="#">Weather Application</a>
+                <a class="blog-header-logo text-body-emphasis text-decoration-none" th:href="@{/weatherApp}" >Weather Application</a>
             </div>
         </div>
     </header>
-
-    <div class="nav-scroller py-1 mb-3 border-bottom">
-        <nav class="nav nav-underline justify-content-between">
-            <a class="nav-item nav-link link-body-emphasis active" href="#">World</a>
-            <a class="nav-item nav-link link-body-emphasis" href="#">U.S.</a>
-            <a class="nav-item nav-link link-body-emphasis" href="#">Technology</a>
-            <a class="nav-item nav-link link-body-emphasis" href="#">Design</a>
-            <a class="nav-item nav-link link-body-emphasis" href="#">Culture</a>
-            <a class="nav-item nav-link link-body-emphasis" href="#">Business</a>
-            <a class="nav-item nav-link link-body-emphasis" href="#">Politics</a>
-        </nav>
-    </div>
 </div>
 
 <main class="container">
@@ -74,9 +62,9 @@
 </main>
 
 <footer th:fragment="footer" class="py-5 text-center text-body-secondary bg-body-tertiary">
-    <p>Blog template built for <a href="https://getbootstrap.com/">Bootstrap</a> by <a href="https://twitter.com/mdo">@mdo</a>.</p>
+    <p>Weather Application created by <a th:href="@{https://github.com/stepniewskirafal}">Rafał Stępniewski</a>.</p>
     <p class="mb-0">
-        <a href="#">Back to top</a>
+        <a href="#" >Back to top</a>
     </p>
 </footer>
 <script src="/docs/5.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
