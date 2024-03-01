@@ -1,8 +1,10 @@
 package pl.rstepniewski.weatherapp;
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -27,7 +29,6 @@ public class WeatherViewController {
             WeatherRequestFrom weatherRequestFrom = (WeatherRequestFrom) model.asMap().get("weatherRequestFrom");
             final ChartDataDto weatherForecast = weatherService.getWeatherChartData(weatherRequestFrom);
 
-            model.addAttribute("weatherRequestFrom", weatherRequestFrom);
             model.addAttribute("weatherForecast", weatherForecast);
         }
         return "weather/city";
@@ -35,13 +36,18 @@ public class WeatherViewController {
 
     @GetMapping("pick")
     public  String addView(Model model){
-        model.addAttribute("WeatherRequestFrom", new WeatherRequestFrom());
+        model.addAttribute("weatherRequestFrom", new WeatherRequestFrom());
 
         return "weather/formPickCity";
     }
 
     @PostMapping("pick")
-    public  String add(WeatherRequestFrom weatherRequestFrom, RedirectAttributes redirectAttributes){
+    public  String add(@Valid WeatherRequestFrom weatherRequestFrom, BindingResult bindingResult, RedirectAttributes redirectAttributes, Model model){
+        if(bindingResult.hasErrors()){
+            model.addAttribute("weatherRequestFrom", weatherRequestFrom);
+            return "weather/formPickCity";
+            //return "redirect:/weatherApp/pick";
+        }
         redirectAttributes.addFlashAttribute("weatherRequestFrom", weatherRequestFrom);
 
         return "redirect:/weatherApp/city";

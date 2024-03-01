@@ -9,21 +9,23 @@
 
 <div class="form-container d-flex justify-content-center align-items-center">
     <div class="form">
-        <form th:object="${WeatherRequestFrom}" method="post" action="pick">
+        <form th:object="${weatherRequestFrom}" method="post" action="pick">
+
             <div class="mb-3">
                 <label for="cityInput" class="form-label">Chosen city</label>
                 <input type="text" th:field="*{city}" class="form-control" id="cityInput">
+                <p th:if="${#fields.hasErrors('city')}" th:errors="*{city}" class="text-danger">Default Error Message</p>
             </div>
             <div class="mb-3 form-check">
-                <input type="checkbox" th:field="*{Temperature}" class="form-check-input" id="temperatureCheck">
+                <input type="checkbox" th:field="*{temperature}" class="form-check-input" id="temperatureCheck">
                 <label class="form-check-label" for="temperatureCheck">Temperature</label>
             </div>
             <div class="mb-3 form-check">
-                <input type="checkbox" th:field="*{Wind}" class="form-check-input" id="windCheck">
+                <input type="checkbox" th:field="*{wind}" class="form-check-input" id="windCheck">
                 <label class="form-check-label" for="windCheck">Wind</label>
             </div>
             <div class="mb-3 form-check">
-                <input type="checkbox" th:field="*{Rain}" class="form-check-input" id="rainCheck">
+                <input type="checkbox" th:field="*{rain}" class="form-check-input" id="rainCheck">
                 <label class="form-check-label" for="rainCheck">Rain</label>
             </div>
             <button type="submit" class="btn btn-primary">Submit</button>

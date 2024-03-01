@@ -7,29 +7,32 @@ import pl.rstepniewski.weatherapp.model.WeatherRequestFrom;
 import pl.rstepniewski.weatherapp.model.geocode.GeoPosition;
 import pl.rstepniewski.weatherapp.model.geocode.GeocodeResponse;
 import pl.rstepniewski.weatherapp.model.openmeteo.ChartDataDto;
-import pl.rstepniewski.weatherapp.model.openmeteo.MeteoHourlyScore;
 import pl.rstepniewski.weatherapp.model.openmeteo.MeteoResponse;
 
-import java.util.Arrays;
 import java.util.NoSuchElementException;
 
 @Service
 public class WeatherService {
 
     public ChartDataDto getWeatherChartData(WeatherRequestFrom weatherRequestFrom) {
-        final MeteoResponse meteoResponse = getWeatherForecast(weatherRequestFrom);
-
-        return new ChartDataDto( meteoResponse.getHourlyUnits(), meteoResponse.getHourlyScore() );
-    }
-
-    public MeteoResponse getWeatherForecast(WeatherRequestFrom weatherRequestFrom) {
         final ResponseEntity<GeocodeResponse> geocodeResponse = getCityGeoCode(weatherRequestFrom);
         if (!geocodeResponse.getStatusCode().is2xxSuccessful() && geocodeResponse.getBody() != null) {
             throw new NoSuchElementException();
         }
         GeoPosition geoPosition = getPosition(geocodeResponse);
         final ResponseEntity<MeteoResponse> weatherForecast = getWeatherForecast(geoPosition, weatherRequestFrom);
-        return weatherForecast.getBody();
+
+        return createWeatherChartData(weatherForecast, geocodeResponse);
+    }
+
+    private ChartDataDto createWeatherChartData(ResponseEntity<MeteoResponse> weatherForecast, ResponseEntity<GeocodeResponse> geocodeResponse) {
+        return ChartDataDto.builder()
+                .city(geocodeResponse.getBody().getItems().get(0).getAddress().getCity())
+                .state(geocodeResponse.getBody().getItems().get(0).getAddress().getState())
+                .countryName(geocodeResponse.getBody().getItems().get(0).getAddress().getCountryName())
+                .hourlyUnits(weatherForecast.getBody().getHourlyUnits())
+                .hourlyScore(weatherForecast.getBody().getHourlyScore())
+                .build();
     }
 
     public GeoPosition getPosition(ResponseEntity<GeocodeResponse> response) {
