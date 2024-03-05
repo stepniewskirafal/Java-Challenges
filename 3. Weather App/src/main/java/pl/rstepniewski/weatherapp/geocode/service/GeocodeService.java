@@ -24,11 +24,11 @@ public class GeocodeService {
     }
 
     @Retryable(value = {HttpClientErrorException.class, HttpServerErrorException.class, HttpStatusCodeException.class}, maxAttempts = 3, backoff = @Backoff(delay = 2000))
-    public GeocodeResponse getCityGeoCode(String cityName) {
+    public GeocodeResponse getCityGeoCode(final String cityName) {
 
         final String url = buildUrl(cityName);
 
-        GeocodeResponse geocodeResponse = restClient.get()
+        final GeocodeResponse geocodeResponse = restClient.get()
                     .uri(url)
                     .retrieve()
                     .onStatus(status -> status.is4xxClientError(), (request, response) -> {
@@ -46,10 +46,10 @@ public class GeocodeService {
         return geocodeResponse;
     }
 
-    private String buildUrl(String cityName) {
-        String baseUrl = "https://geocode.search.hereapi.com/v1/geocode";
+    private String buildUrl(final String cityName) {
+        final String baseUrl = "https://geocode.search.hereapi.com/v1/geocode";
 
-        UriComponentsBuilder uriBuilder = UriComponentsBuilder.fromHttpUrl(baseUrl)
+        final UriComponentsBuilder uriBuilder = UriComponentsBuilder.fromHttpUrl(baseUrl)
                 .queryParam("q", cityName)
                 .queryParam("apiKey", apiKey);
         return uriBuilder.toUriString();

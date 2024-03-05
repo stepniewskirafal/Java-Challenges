@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-import pl.rstepniewski.weatherapp.openmeteo.dto.ChartDataDto;
+import pl.rstepniewski.weatherapp.weatherapp.model.dto.CityDto;
 import pl.rstepniewski.weatherapp.weatherapp.model.dto.WeatherRequestFormDto;
 import pl.rstepniewski.weatherapp.weatherapp.service.WeatherService;
 
@@ -28,9 +28,9 @@ public class WeatherViewController {
     @GetMapping("city")
     public String cityIndexView(@ModelAttribute("weatherRequestFrom") WeatherRequestFormDto weatherRequestFormDto, Model model) {
         if (model.containsAttribute("weatherRequestFrom")) {
-            final ChartDataDto weatherForecast = weatherService.getWeatherChartData(weatherRequestFormDto);
+            final CityDto chartData = weatherService.getWeatherChartData(weatherRequestFormDto);
 
-            model.addAttribute("weatherForecast", weatherForecast);
+            model.addAttribute("chartData", chartData);
         }
         return "weather/city";
     }

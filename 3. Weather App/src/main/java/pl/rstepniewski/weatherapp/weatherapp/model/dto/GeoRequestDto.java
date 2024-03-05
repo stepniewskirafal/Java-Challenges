@@ -1,4 +1,4 @@
-package pl.rstepniewski.weatherapp.geocode.model.dto;
+package pl.rstepniewski.weatherapp.weatherapp.model.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

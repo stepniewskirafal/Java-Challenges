@@ -12,19 +12,19 @@
     <th:block th:replace="template :: header"></th:block>
 
     <div class="d-flex flex-column align-items-center">
-        <p th:text="'Weather in city: ' + ${weatherForecast.city}">Default City</p>
-        <p th:text="'Country: '+ ${weatherForecast.countryName} +', state: '+ ${weatherForecast.state}">Default countryName and state</p>
+        <p th:text="'Weather in city: ' + ${chartData.city}">Default City</p>
+        <p th:text="'Country: '+ ${chartData.countryName} +', state: '+ ${chartData.state}">Default countryName and state</p>
     </div>
 
-    <div th:if="${weatherForecast.hourlyScore.temperature2m}"
+    <div th:if="${chartData.temperature2mScore}"
          class="d-flex justify-content-center chart-container">
         <canvas id="temperatureChart"></canvas>
     </div>
-    <div th:if="${weatherForecast.hourlyScore.rain}"
+    <div th:if="${chartData.rainScore}"
          class="d-flex justify-content-center chart-container">
         <canvas id="rainChart"></canvas>
     </div>
-    <div th:if="${weatherForecast.hourlyScore.windSpeed10m}"
+    <div th:if="${chartData.windSpeed10mScore}"
          class="d-flex justify-content-center chart-container">
         <canvas id="windSpeedChart"></canvas>
     </div>
@@ -34,10 +34,13 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script th:inline="javascript">
 
-        const timeLabels = /*[[${weatherForecast.hourlyScore.time}]]*/ ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10'];
-        const temperatureData = /*[[${weatherForecast.hourlyScore.temperature2m}]]*/ [0];
-        const rainData = /*[[${weatherForecast.hourlyScore.rain}]]*/ [0];
-        const windSpeedData = /*[[${weatherForecast.hourlyScore.windSpeed10m}]]*/ [0];
+        const timeLabels = /*[[${chartData.timeScore}]]*/ ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10'];
+        const temperatureData = /*[[${chartData.temperature2mScore}]]*/ [0];
+        const rainData = /*[[${chartData.rainScore}]]*/ [0];
+        const windSpeedData = /*[[${chartData.windSpeed10mScore}]]*/ [0];
+        const temperatureUnit = /*[[${chartData.temperature2mUnit}]]*/ [0];
+        const rainUnit = /*[[${chartData.rainUnit}]]*/ [0];
+        const windSpeedUnit = /*[[${chartData.windSpeed10mUnit}]]*/ [0];
 
         if (temperatureData && temperatureData.length > 0) {
             let temperatureCtx = document.getElementById('temperatureChart').getContext('2d');
@@ -46,7 +49,7 @@
                 data: {
                     labels: timeLabels,
                     datasets: [{
-                        label: 'Temperature (°C)',
+                        label: `Temperature (${temperatureUnit})`,
                         data: temperatureData,
                         backgroundColor: 'rgba(255, 99, 132, 0.2)',
                         borderColor: 'rgba(255, 99, 132, 1)',
@@ -70,7 +73,7 @@
                 data: {
                     labels: timeLabels,
                     datasets: [{
-                        label: 'Rain (mm)',
+                        label: `Rain (${rainUnit})`,
                         data: rainData,
                         backgroundColor: 'rgba(54, 162, 235, 0.2)',
                         borderColor: 'rgba(54, 162, 235, 1)',
@@ -94,7 +97,7 @@
                 data: {
                     labels: timeLabels,
                     datasets: [{
-                        label: 'Wind Speed (km/h)',
+                        label: `Wind Speed (${windSpeedUnit})`,
                         data: windSpeedData,
                         backgroundColor: 'rgba(255, 206, 86, 0.2)',
                         borderColor: 'rgba(255, 206, 86, 1)',

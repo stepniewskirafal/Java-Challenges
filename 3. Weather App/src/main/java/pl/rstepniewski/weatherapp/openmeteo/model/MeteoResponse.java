@@ -13,10 +13,13 @@ import lombok.Setter;
 public class MeteoResponse {
         private double latitude;
         private double longitude;
-        private double generationtimeMs;
-        private int utc_offset_seconds;
+        @JsonProperty("generationtimeMs")
+        private double generationTimeMs;
+        @JsonProperty("utc_offset_seconds")
+        private int utcOffsetSeconds;
         private String timezone;
-        private String timezone_abbreviation;
+        @JsonProperty("timezone_abbreviation")
+        private String timezoneAbbreviation;
         private double elevation;
         @JsonProperty("hourly_units")
         private MeteoHourlyUnits hourlyUnits;

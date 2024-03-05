@@ -12,5 +12,5 @@ import java.util.List;
 @Getter
 @Setter
 public class GeocodeResponse {
-    private List<Item> Items;
+    private List<Item> items;
 }
