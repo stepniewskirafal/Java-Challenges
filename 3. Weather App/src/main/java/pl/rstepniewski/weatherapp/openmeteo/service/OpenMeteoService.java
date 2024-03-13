@@ -43,7 +43,6 @@ public class OpenMeteoService {
         return meteoResponse;
     }
 
-
     private String buildUrl(final GeoPosition geoPosition, final WeatherRequestFormDto weatherRequestFormDto) {
         final UriComponentsBuilder uriBuilder = UriComponentsBuilder.fromHttpUrl("https://api.open-meteo.com/v1/forecast")
                 .queryParam("latitude", geoPosition.getLat())

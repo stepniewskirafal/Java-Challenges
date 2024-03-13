@@ -7,5 +7,5 @@ import java.util.Optional;
 import java.util.UUID;
 
 public interface CityRepository extends CrudRepository<City, UUID> {
-    Optional<City> findByCity(String cityName);
+    Optional<City> findByCityIgnoreCase(String cityName);
 }

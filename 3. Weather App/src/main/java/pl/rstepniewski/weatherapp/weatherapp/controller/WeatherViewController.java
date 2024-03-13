@@ -25,20 +25,9 @@ public class WeatherViewController {
         return "weather/index";
     }
 
-    @GetMapping("city")
-    public String cityIndexView(@ModelAttribute("weatherRequestFrom") WeatherRequestFormDto weatherRequestFormDto, Model model) {
-        if (model.containsAttribute("weatherRequestFrom")) {
-            final CityDto chartData = weatherService.getWeatherChartData(weatherRequestFormDto);
-
-            model.addAttribute("chartData", chartData);
-        }
-        return "weather/city";
-    }
-
     @GetMapping("pick")
-    public  String addView(Model model){
+    public  String addView(Model model, RedirectAttributes redirectAttributes){
         model.addAttribute("weatherRequestFrom", new WeatherRequestFormDto());
-
         return "weather/formPickCity";
     }
 
@@ -49,7 +38,16 @@ public class WeatherViewController {
             return "weather/formPickCity";
         }
         redirectAttributes.addFlashAttribute("weatherRequestFrom", weatherRequestFormDto);
-
         return "redirect:/weatherApp/city";
+    }
+
+    @GetMapping("city")
+    public String cityIndexView(@ModelAttribute("weatherRequestFrom") WeatherRequestFormDto weatherRequestFormDto, Model model) {
+        if (model.containsAttribute("weatherRequestFrom")) {
+            final CityDto chartData = weatherService.getWeatherChartData(weatherRequestFormDto);
+
+            model.addAttribute("chartData", chartData);
+        }
+        return "weather/city";
     }
 }

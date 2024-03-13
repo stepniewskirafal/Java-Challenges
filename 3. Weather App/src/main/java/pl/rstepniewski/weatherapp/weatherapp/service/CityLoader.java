@@ -21,6 +21,49 @@ public class CityLoader implements CommandLineRunner {
 
     @Override
     public void run(String... args) throws Exception {
+        final List<String> citiesWithRegions = Arrays.asList(
+                "Warszawa, Mazowieckie",
+                "Krakow, Malopolskie"/* ,
+               "Lodz, Lodzkie",
+                "Wroclaw, Dolnoslaskie",
+                "Poznan, Wielkopolskie",
+                "Gdansk, Pomorskie",
+                "Szczecin, Zachodniopomorskie",
+                "Bydgoszcz, Kujawsko-Pomorskie",
+                "Lublin, Lubelskie",
+                "Katowice, Slaskie",
+                "Bialystok, Podlaskie",
+                "Gdynia, Pomorskie",
+                "Czestochowa, Slaskie",
+                "Sosnowiec, Slaskie",
+                "Torun, Kujawsko-Pomorskie",
+                "Kielce, Swietokrzyskie",
+                "Gliwice, Slaskie",
+                "Zabrze, Slaskie",
+                "Olsztyn, Warminsko-Mazurskie",
+                "Bielsko-Biala, Slaskie",
+                "Rzeszow, Podkarpackie",
+                "Ruda Slaska, Slaskie",
+                "Rybnik, Slaskie",
+                "Dabrowa Gornicza, Slaskie",
+                "Plock, Mazowieckie",
+                "Elblag, Warminsko-Mazurskie",
+                "Opole, Opolskie"*/
+        );
+
+        final WeatherRequestFormDto weatherRequestFormDto = WeatherRequestFormDto
+                .builder()
+                .temperature(true)
+                .rain(true)
+                .wind(true)
+                .build();
+        for(final String city : citiesWithRegions){
+            weatherRequestFormDto.setCity(city);
+            final CityDto cityDto = weatherService.getWeatherChartData(weatherRequestFormDto);
+            final City cityEntity = CityMapper.toEntity(cityDto);
+            repository.save(cityEntity);
+        }
+
 
         /*City cityWarsaw = City.builder()
                 .id(UUID.randomUUID())
@@ -86,47 +129,5 @@ public class CityLoader implements CommandLineRunner {
                 .rainUnit("mm")
                 .windSpeed10mUnit("km/h")
                 .build();*/
-        final List<String> citiesWithRegions = Arrays.asList(
-                "Warszawa, Mazowieckie",
-                "Krakow, Malopolskie",
-                "Lodz, Lodzkie",
-                "Wroclaw, Dolnoslaskie",
-                "Poznan, Wielkopolskie",
-                "Gdansk, Pomorskie",
-                "Szczecin, Zachodniopomorskie",
-                "Bydgoszcz, Kujawsko-Pomorskie",
-                "Lublin, Lubelskie",
-                "Katowice, Slaskie",
-                "Bialystok, Podlaskie",
-                "Gdynia, Pomorskie",
-                "Czestochowa, Slaskie",
-                "Sosnowiec, Slaskie",
-                "Torun, Kujawsko-Pomorskie",
-                "Kielce, Swietokrzyskie",
-                "Gliwice, Slaskie",
-                "Zabrze, Slaskie",
-                "Olsztyn, Warminsko-Mazurskie",
-                "Bielsko-Biala, Slaskie",
-                "Rzeszow, Podkarpackie",
-                "Ruda Slaska, Slaskie",
-                "Rybnik, Slaskie",
-                "Dabrowa Gornicza, Slaskie",
-                "Plock, Mazowieckie",
-                "Elblag, Warminsko-Mazurskie",
-                "Opole, Opolskie"
-        );
-
-        final WeatherRequestFormDto weatherRequestFormDto = WeatherRequestFormDto
-                .builder()
-                .temperature(true)
-                .rain(true)
-                .wind(true)
-                .build();
-        for(final String city : citiesWithRegions){
-            weatherRequestFormDto.setCity(city);
-            final CityDto cityDto = weatherService.getWeatherChartData(weatherRequestFormDto);
-            final City cityEntity = CityMapper.toEntity(cityDto);
-            repository.save(cityEntity);
-        }
     }
 }

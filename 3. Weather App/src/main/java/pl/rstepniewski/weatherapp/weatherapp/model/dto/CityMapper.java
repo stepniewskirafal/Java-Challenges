@@ -40,7 +40,7 @@ public final  class CityMapper {
         city.setCity(cityDto.getCity());
         city.setState(cityDto.getState());
         city.setCountryName(cityDto.getCountryName());
-        city.setTimeScore(Arrays.asList(cityDto.getTimeScore())); // Przekształcanie tablicy na listę
+        city.setTimeScore(Arrays.asList(cityDto.getTimeScore()));
         city.setTemperature2mScore(arrayToList(cityDto.getTemperature2mScore()));
         city.setRainScore(arrayToList(cityDto.getRainScore()));
         city.setWindSpeed10mScore(arrayToList(cityDto.getWindSpeed10mScore()));
@@ -52,10 +52,10 @@ public final  class CityMapper {
     }
 
     private static List<Double> arrayToList(final double... array) {
-        return Arrays.stream(array).boxed().collect(Collectors.toList());
+        return (array == null)? null : Arrays.stream(array).boxed().collect(Collectors.toList());
     }
 
     private static double[] listToArray(final List<Double> list) {
-        return list.stream().mapToDouble(Double::doubleValue).toArray();
+        return (list == null)? null : list.stream().mapToDouble(Double::doubleValue).toArray();
     }
 }

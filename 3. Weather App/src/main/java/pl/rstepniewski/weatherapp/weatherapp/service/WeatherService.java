@@ -3,15 +3,14 @@ package pl.rstepniewski.weatherapp.weatherapp.service;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import pl.rstepniewski.weatherapp.geocode.model.GeoPosition;
+import pl.rstepniewski.weatherapp.geocode.model.dto.GeocodeResponseDto;
 import pl.rstepniewski.weatherapp.weatherapp.model.City;
 import pl.rstepniewski.weatherapp.weatherapp.model.dto.CityDto;
 import pl.rstepniewski.weatherapp.weatherapp.model.dto.CityMapper;
 import pl.rstepniewski.weatherapp.weatherapp.model.dto.WeatherRequestFormDto;
-import pl.rstepniewski.weatherapp.geocode.model.GeocodeResponse;
 import pl.rstepniewski.weatherapp.geocode.service.GeocodeService;
 import pl.rstepniewski.weatherapp.openmeteo.model.MeteoResponse;
 import pl.rstepniewski.weatherapp.openmeteo.service.OpenMeteoService;
-import pl.rstepniewski.weatherapp.weatherapp.repository.CityRepository;
 
 import java.util.Optional;
 
@@ -21,25 +20,31 @@ public class WeatherService {
 
     private final OpenMeteoService openMeteoService;
     private final GeocodeService geocodeService;
-    private final CityRepository cityRepository;
-
+    private final CityService cityService;
 
     public CityDto getWeatherChartData(final WeatherRequestFormDto weatherRequestFormDto) {
-        final Optional<City> cityOptional = cityRepository.findByCity(weatherRequestFormDto.getCity());
-        CityDto weatherChartData = null;
+        final Optional<City> cityOptional = cityService.findByCity(weatherRequestFormDto.getCity());
 
-        if(cityOptional.isPresent()){
-            final City city = cityOptional.get();
-            final CityDto cityDto = CityMapper.toDto(city);
-            weatherChartData = applyRequestFilters(cityDto, weatherRequestFormDto);
-        }else{
-            final GeocodeResponse cityGeoCode = geocodeService.getCityGeoCode(weatherRequestFormDto.getCity());
-            final GeoPosition cityPosition = extractPosition(cityGeoCode);
-            final MeteoResponse meteoResponse = openMeteoService.getWeatherForecast(cityPosition, weatherRequestFormDto);
+        return cityOptional
+                .map(city -> getForecastFromDB(weatherRequestFormDto, Optional.of(city)))
+                .orElseGet(() -> getForecastFromWeb(weatherRequestFormDto));
+    }
 
-            weatherChartData = createWeatherChartData(meteoResponse, cityGeoCode);
-        }
+    private CityDto getForecastFromWeb(WeatherRequestFormDto weatherRequestFormDto) {
+        CityDto weatherChartData;
+        final GeocodeResponseDto cityGeoCode = geocodeService.getCityGeoCode(weatherRequestFormDto.getCity());
+        final GeoPosition cityPosition = extractPosition(cityGeoCode);
+        final MeteoResponse meteoResponse = openMeteoService.getWeatherForecast(cityPosition, weatherRequestFormDto);
 
+        weatherChartData = createWeatherChartData(meteoResponse, cityGeoCode);
+        return weatherChartData;
+    }
+
+    private CityDto getForecastFromDB(WeatherRequestFormDto weatherRequestFormDto, Optional<City> cityOptional) {
+        CityDto weatherChartData;
+        final City city = cityOptional.get();
+        final CityDto cityDto = CityMapper.toDto(city);
+        weatherChartData = applyRequestFilters(cityDto, weatherRequestFormDto);
         return weatherChartData;
     }
 
@@ -56,7 +61,7 @@ public class WeatherService {
         return cityDto;
     }
 
-    private CityDto createWeatherChartData(final MeteoResponse meteoResponse, final GeocodeResponse geocodeResponse) {
+    private CityDto createWeatherChartData(final MeteoResponse meteoResponse, final GeocodeResponseDto geocodeResponse) {
         final String[] cityTitle = geocodeResponse.getItems()
                 .get(0)
                 .getTitle()
@@ -81,7 +86,7 @@ public class WeatherService {
                 .build();
     }
 
-    private GeoPosition extractPosition(final GeocodeResponse geocode) {
+    private GeoPosition extractPosition(final GeocodeResponseDto geocode) {
         final double lat = geocode.getItems().get(0).getPosition().getLat();
         final double lng = geocode.getItems().get(0).getPosition().getLng();
 
