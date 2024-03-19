@@ -9,9 +9,9 @@ import org.springframework.web.client.HttpStatusCodeException;
 import org.springframework.web.client.RestClient;
 import org.springframework.web.util.UriComponentsBuilder;
 import pl.rstepniewski.weatherapp.openmeteo.exception.ApiOpenMeteoException;
+import pl.rstepniewski.weatherapp.openmeteo.model.dto.MeteoResponseDto;
 import pl.rstepniewski.weatherapp.weatherapp.model.dto.WeatherRequestFormDto;
 import pl.rstepniewski.weatherapp.geocode.model.GeoPosition;
-import pl.rstepniewski.weatherapp.openmeteo.model.MeteoResponse;
 
 @Service
 public class OpenMeteoService {
@@ -23,10 +23,10 @@ public class OpenMeteoService {
     }
 
     @Retryable(value = {HttpClientErrorException.class, HttpServerErrorException.class, HttpStatusCodeException.class}, maxAttempts = 3, backoff = @Backoff(delay = 2000))
-    public MeteoResponse getWeatherForecast(final GeoPosition geoPosition, final WeatherRequestFormDto weatherRequestFormDto) {
+    public MeteoResponseDto getWeatherForecast(final GeoPosition geoPosition, final WeatherRequestFormDto weatherRequestFormDto) {
         final String uri = buildUrl(geoPosition, weatherRequestFormDto);
 
-        final MeteoResponse meteoResponse = restClient.get()
+        final MeteoResponseDto meteoResponse = restClient.get()
                     .uri(uri)
                     .retrieve()
                     .onStatus(status -> status.is4xxClientError(), (request, response) -> {
@@ -35,7 +35,7 @@ public class OpenMeteoService {
                     .onStatus(status -> status.is5xxServerError(), (request, response) -> {
                         throw new ApiOpenMeteoException("5xxClientError");
                     })
-                    .body(MeteoResponse.class);
+                    .body(MeteoResponseDto.class);
 
         if (meteoResponse == null) {
             throw new RuntimeException("Received null response from weather service");

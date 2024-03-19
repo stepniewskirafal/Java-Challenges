@@ -4,12 +4,12 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import pl.rstepniewski.weatherapp.geocode.model.GeoPosition;
 import pl.rstepniewski.weatherapp.geocode.model.dto.GeocodeResponseDto;
+import pl.rstepniewski.weatherapp.openmeteo.model.dto.MeteoResponseDto;
 import pl.rstepniewski.weatherapp.weatherapp.model.City;
 import pl.rstepniewski.weatherapp.weatherapp.model.dto.CityDto;
 import pl.rstepniewski.weatherapp.weatherapp.model.dto.CityMapper;
 import pl.rstepniewski.weatherapp.weatherapp.model.dto.WeatherRequestFormDto;
 import pl.rstepniewski.weatherapp.geocode.service.GeocodeService;
-import pl.rstepniewski.weatherapp.openmeteo.model.MeteoResponse;
 import pl.rstepniewski.weatherapp.openmeteo.service.OpenMeteoService;
 
 import java.util.Optional;
@@ -34,7 +34,7 @@ public class WeatherService {
         CityDto weatherChartData;
         final GeocodeResponseDto cityGeoCode = geocodeService.getCityGeoCode(weatherRequestFormDto.getCity());
         final GeoPosition cityPosition = extractPosition(cityGeoCode);
-        final MeteoResponse meteoResponse = openMeteoService.getWeatherForecast(cityPosition, weatherRequestFormDto);
+        final MeteoResponseDto meteoResponse = openMeteoService.getWeatherForecast(cityPosition, weatherRequestFormDto);
 
         weatherChartData = createWeatherChartData(meteoResponse, cityGeoCode);
         return weatherChartData;
@@ -61,7 +61,7 @@ public class WeatherService {
         return cityDto;
     }
 
-    private CityDto createWeatherChartData(final MeteoResponse meteoResponse, final GeocodeResponseDto geocodeResponse) {
+    private CityDto createWeatherChartData(final MeteoResponseDto meteoResponse, final GeocodeResponseDto geocodeResponse) {
         final String[] cityTitle = geocodeResponse.getItems()
                 .get(0)
                 .getTitle()

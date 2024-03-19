@@ -1,5 +1,6 @@
 package pl.rstepniewski.weatherapp.geocode.service;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.retry.annotation.Backoff;
@@ -10,14 +11,14 @@ import org.springframework.web.client.HttpServerErrorException;
 import org.springframework.web.client.HttpStatusCodeException;
 import org.springframework.web.client.RestClient;
 import org.springframework.web.util.UriComponentsBuilder;
-import pl.rstepniewski.weatherapp.geocode.model.GeocodeResponse;
 import pl.rstepniewski.weatherapp.geocode.model.dto.GeocodeResponseDto;
 import pl.rstepniewski.weatherapp.openmeteo.exception.ApiOpenMeteoException;
 
 @Service
+@RequiredArgsConstructor
 public class GeocodeService {
-
     private final RestClient restClient;
+
     @Value("${Geocode.apiKey}")
     private String apiKey;
 
@@ -31,7 +32,7 @@ public class GeocodeService {
 
         final String url = buildUrl(cityName);
 
-        final GeocodeResponseDto geocodeResponse = restClient.get()
+        final GeocodeResponseDto geocodeResponse = this.restClient.get()
                     .uri(url)
                     .retrieve()
                     .body(GeocodeResponseDto.class);
