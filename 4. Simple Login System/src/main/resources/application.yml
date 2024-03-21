@@ -1,0 +1,10 @@
+server:
+  port: 8008
+spring:
+  application:
+    name: LoginPage
+  datasource:
+    url: jdbc:postgresql://localhost:5432/registration
+    username: postgres
+    password: mySecretPassword
+    driver-class-name: org.postgresql.Driver

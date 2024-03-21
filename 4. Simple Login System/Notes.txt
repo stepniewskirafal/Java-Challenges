@@ -1,0 +1,1 @@
+docker run --name simple-login-postgres -e POSTGRES_PASSWORD=mySecretPassword -e POSTGRES_DB=registration -p 5432:5432 -d postgres
