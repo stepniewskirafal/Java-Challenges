@@ -38,7 +38,6 @@ public class BookController {
     private final BookService service;
     private final ObjectMapper mapper;
 
-
     @GetMapping("/books")
     public ResponseEntity<List<BookDTO>> getBooks(
             @RequestParam(value = "pageNo", defaultValue = "0", required = false) int pageNo,
