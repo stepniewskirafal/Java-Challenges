@@ -23,7 +23,9 @@ public class LoginPageApplication {
     @Bean
     CommandLineRunner run(AppRoleRepository roleRepository, AppUserRepository userRepository, PasswordEncoder passwordEncoder){
         return args -> {
-            if(roleRepository.findByAuthority("ADMIN").isPresent()) return;
+            if(roleRepository.findByAuthority("ADMIN").isPresent()) {
+                return;
+            }
             final AppRole adminRole = roleRepository.save(new AppRole("ADMIN"));
             final AppRole userRole = roleRepository.save(new AppRole("USER"));
             final Set<AppRole> roles = new HashSet<>();

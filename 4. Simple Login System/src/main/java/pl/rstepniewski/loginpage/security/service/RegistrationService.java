@@ -21,14 +21,14 @@ public class RegistrationService {
     private final AppRoleService appRoleService;
     private final PasswordEncoder passwordEncoder;
 
-    public AppUserDto registerUser(AppUserDto applicationUserDto){
-        final String encodedPassword = passwordEncoder.encode(applicationUserDto.getPassword());
+    public AppUserDto registerUser(AppUserDto dto){
+        final String encodedPassword = passwordEncoder.encode(dto.getPassword());
         AppRole userRole = appRoleService.findByAuthority("USER").get();
 
         Set<AppRole> authorities = new HashSet<>();
         authorities.add(userRole);
 
-        final AppUser applicationUser = appUserService.save(applicationUserDto.getUsername(), applicationUserDto.getEmail(), encodedPassword, authorities);
+        final AppUser applicationUser = appUserService.save(dto.getUsername(), dto.getEmail(), encodedPassword, authorities);
 
         return AppUserMapper.map(applicationUser);
     }

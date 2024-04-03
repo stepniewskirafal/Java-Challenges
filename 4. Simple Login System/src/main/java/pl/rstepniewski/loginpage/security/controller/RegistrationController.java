@@ -16,8 +16,8 @@ public class RegistrationController {
     private final RegistrationService registrationService;
 
     @PostMapping("/register")
-    public String registerForm(AppUserDto applicationUserDto) {
-        registrationService.registerUser(applicationUserDto);
+    public String registerForm(AppUserDto dto) {
+        registrationService.registerUser(dto);
         return "redirect:/confirmation";
     }
 

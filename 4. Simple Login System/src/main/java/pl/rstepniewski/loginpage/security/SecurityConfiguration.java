@@ -12,9 +12,6 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import pl.rstepniewski.loginpage.security.model.dto.AppUserDto;
 
 @Configuration
 @EnableWebSecurity(debug = true)
