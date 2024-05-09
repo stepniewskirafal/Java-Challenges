@@ -1,9 +1,7 @@
 package pl.rstepniewski.loginpage.security.model;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
+import jakarta.validation.constraints.Size;
 import org.springframework.security.core.GrantedAuthority;
 
 import java.io.Serial;
@@ -20,6 +18,7 @@ public class AppRole implements GrantedAuthority {
     @Column(name="role_id")
     private UUID roleId;
 
+    @Size(min = 3, max = 20)
     private String authority;
 
     public AppRole(){

@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import pl.rstepniewski.loginpage.security.model.dto.AppUserDto;
 
 @Controller
-@RequestMapping("/login_page")
+@RequestMapping("/simple_login")
 class LoginController {
 
     @GetMapping("/login")
@@ -15,5 +15,10 @@ class LoginController {
         AppUserDto user = new AppUserDto();
         model.addAttribute("user", user);
         return "auth/login-form";
+    }
+
+    @GetMapping("/logout-success")
+    public String logoutForm() {
+        return "auth/logout-form";
     }
 }

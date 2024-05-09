@@ -26,13 +26,14 @@ public class AppUser implements UserDetails{
     @Column(name="user_id")
     private UUID userId;
 
-    @Column(unique=true, nullable = false)
+    @Column(name="user_name", unique=true, nullable = false)
     @NotBlank(message = "Nickname must not be blank")
     @Size(min = 3, max = 30)
     private String username;
 
     @Column(unique = true, nullable = false)
     @NotBlank(message = "Email must not be blank")
+    @Size(max = 40)
     @Email(message = "Invalid email address")
     private String email;
 
@@ -42,6 +43,8 @@ public class AppUser implements UserDetails{
     @StrongPassword
     @JsonIgnore
     private String password;
+
+    private Boolean enabled;
 
     @ManyToMany(fetch=FetchType.EAGER)
     @JoinTable(
@@ -63,6 +66,7 @@ public class AppUser implements UserDetails{
         this.email = email;
         this.password = password;
         this.authorities = authorities;
+        this.enabled = false;
     }
 
     public UUID getUserId() {
@@ -105,7 +109,7 @@ public class AppUser implements UserDetails{
 
     @Override
     public String getUsername() {
-        return this.username;
+        return this.email;
     }
 
     /* If you want account locking capabilities create variables and ways to set them for the methods below */
@@ -127,6 +131,10 @@ public class AppUser implements UserDetails{
 
     @Override
     public boolean isEnabled() {
-        return true;
+        return enabled;
+    }
+
+    public void setEnabled(Boolean enabled) {
+        this.enabled = enabled;
     }
 }

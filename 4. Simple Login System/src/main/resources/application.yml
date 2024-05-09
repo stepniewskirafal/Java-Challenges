@@ -1,5 +1,5 @@
 server:
-  port: 8008
+  port: 8080
 spring:
   application:
     name: LoginPage
@@ -10,10 +10,24 @@ spring:
     driver-class-name: org.postgresql.Driver
   jpa:
     hibernate:
-      ddl-auto: create-drop
+      ddl-auto: validate
     show-sql: false
     properties:
       hibernate:
         format_sql: true
     database: postgresql
     database-platform: org.hibernate.dialect.PostgreSQLDialect
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: vultur12@gmail.com
+    password: cydyemnmmrkomjcl
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls: true
+simple-login:
+  security:
+    token:
+      expiration_time_hours: 3

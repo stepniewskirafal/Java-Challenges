@@ -17,7 +17,14 @@ import org.springframework.security.web.SecurityFilterChain;
 @EnableWebSecurity(debug = true)
 public class SecurityConfiguration {
 
-	private static final String[] WHITE_LIST_URL = {"/login_page/allowed", "/login_page/register", "/login_page/confirmation" };
+	private static final String[] WHITE_LIST_URL = {
+			"/",
+			"/simple_login/",
+			"/simple_login/allowed",
+			"/simple_login/register",
+			"/simple_login/confirmation",
+			"/simple_login/verifyMail/**"
+	};
 
 	@Bean
 	public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
@@ -26,14 +33,21 @@ public class SecurityConfiguration {
 				.authorizeHttpRequests(req -> req
 						.requestMatchers(WHITE_LIST_URL)
 						.permitAll()
+						.requestMatchers("/simple_login/admin/**").hasRole("ADMIN")
+						.requestMatchers("/simple_login/restricted/**").hasAnyRole("ADMIN", "USER")
 						.anyRequest()
 						.authenticated()
 				)
 				.formLogin(login -> login
-						.loginPage("/login_page/login")
-						.defaultSuccessUrl("/login_page/restricted", true)
+						.loginPage("/simple_login/login")
+						.usernameParameter("email")
+						.passwordParameter("password")
+						.defaultSuccessUrl("/simple_login/", true)
 						.permitAll()
 				)
+				.logout(logout -> logout
+						.logoutSuccessUrl("/simple_login/logout-success")
+						.permitAll())
 				.build();
 	}
 

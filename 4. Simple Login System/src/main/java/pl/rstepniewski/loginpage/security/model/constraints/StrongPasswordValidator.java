@@ -11,12 +11,12 @@ public class StrongPasswordValidator implements ConstraintValidator<StrongPasswo
     private static final String PASSWORD_PATTERN = "^(?=.*[0-9])(?=.*[!@#$%^&*()-+=])(?=\\S+$).{8,}$";
 
     @Override
-    public void initialize(final StrongPassword password) {
-        ConstraintValidator.super.initialize(password);
+    public void initialize(final StrongPassword constraintAnnotation) {
+        ConstraintValidator.super.initialize(constraintAnnotation);
     }
 
     @Override
-    public boolean isValid(final String password, final ConstraintValidatorContext validator) {
+    public boolean isValid(final String password, final ConstraintValidatorContext validatorContext) {
         if (password == null) {
             return false;
         }
