@@ -25,6 +25,8 @@ jobs:
         java-version: '21'
         distribution: 'temurin'
         cache: maven
+    - name: List directory contents
+      run: ls -R
     - name: Build with Maven
       run: mvn -B package --file "Java-Challenges/4. Simple Login System/pom.xml"
 
